@@ -9,6 +9,11 @@ class MobilePhone {
   final bool inStock;
   final bool isFeatured;
 
+  final String? _description;
+  final String? _slug;
+  final int? _stock;
+  final double? _rating;
+
   MobilePhone({
     required this.id,
     required this.name,
@@ -19,7 +24,28 @@ class MobilePhone {
     required this.specs,
     required this.inStock,
     required this.isFeatured,
-  });
+    String? description,
+    String? slug,
+    int? stock,
+    double? rating,
+  })  : _description = description,
+        _slug = slug,
+        _stock = stock,
+        _rating = rating;
+
+  String get description =>
+      _description ??
+      (specs.isNotEmpty
+          ? '$name ($brand $model) equipped with ${specs.values.take(2).join(', ')}.'
+          : '$brand $model premium smartphone.');
+
+  String get slug =>
+      _slug ??
+      '${brand.toLowerCase()}-${model.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-')}-$id';
+
+  int get stock => _stock ?? (inStock ? 15 : 0);
+
+  double get rating => _rating ?? 4.8;
 
   factory MobilePhone.fromJson(Map<String, dynamic> json) {
     Map<String, String> sp = {};
@@ -39,6 +65,10 @@ class MobilePhone {
       specs: sp,
       inStock: json['inStock'] ?? true,
       isFeatured: json['isFeatured'] ?? false,
+      description: json['description'],
+      slug: json['slug'],
+      stock: json['stock'] is num ? (json['stock'] as num).toInt() : null,
+      rating: json['rating'] is num ? (json['rating'] as num).toDouble() : null,
     );
   }
 }

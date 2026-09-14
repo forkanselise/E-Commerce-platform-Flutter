@@ -38,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
                     gradient: NexusTheme.goldGradient,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Text('BUTTERCUP • ARTISAN BAKERY & TECH HUB', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.extrabold, letterSpacing: 0.8)),
+                  child: const Text('BUTTERCUP • ARTISAN BAKERY & TECH HUB', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
                 ),
                 const SizedBox(height: 12),
                 const Text(

@@ -32,11 +32,11 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
           children: [
             Image.asset(
               'assets/images/buttercup_logo.png',
-              height: 42,
+              height: 50,
               fit: BoxFit.contain,
               errorBuilder: (ctx, err, stack) => Image.asset(
                 'assets/images/Picture2.png',
-                height: 42,
+                height: 50,
                 fit: BoxFit.contain,
                 errorBuilder: (c, e, s) => Container(
                   padding: const EdgeInsets.all(6),
@@ -48,31 +48,31 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
-                    color: NexusTheme.primaryGold,
-                  ),
-                ),
-                const Text(
-                  'Bake • Make • Learn',
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                    color: NexusTheme.roseLight,
-                    letterSpacing: 0.8,
-                  ),
-                ),
-              ],
-            ),
+            // const SizedBox(width: 10),
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text(
+            //       title,
+            //       style: const TextStyle(
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.w900,
+            //         letterSpacing: 1.2,
+            //         color: NexusTheme.primaryGold,
+            //       ),
+            //     ),
+            //     const Text(
+            //       'Bake • Make • Learn',
+            //       style: TextStyle(
+            //         fontSize: 9,
+            //         fontWeight: FontWeight.w700,
+            //         color: NexusTheme.roseLight,
+            //         letterSpacing: 0.8,
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -82,7 +82,8 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
           alignment: Alignment.center,
           children: [
             IconButton(
-              icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 22),
+              icon: const Icon(Icons.shopping_bag_outlined,
+                  color: Colors.white, size: 22),
               tooltip: 'Shopping Cart',
               onPressed: () {
                 showModalBottomSheet(
@@ -103,11 +104,15 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
                     color: NexusTheme.rosePrimary,
                     shape: BoxShape.circle,
                   ),
-                  constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                  constraints:
+                      const BoxConstraints(minWidth: 18, minHeight: 18),
                   child: Center(
                     child: Text(
                       '${cartState.totalItemCount}',
-                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -121,7 +126,8 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
             tooltip: 'User Menu',
             offset: const Offset(0, 48),
             color: NexusTheme.bgSurface,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             onSelected: (val) async {
               if (val == 'profile') {
                 showModalBottomSheet(
@@ -159,12 +165,18 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
                         children: [
                           Text(
                             u.fullName,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: NexusTheme.textDarkPrimary),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: NexusTheme.textDarkPrimary),
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             u.subscriptionTier,
-                            style: const TextStyle(fontSize: 11, color: NexusTheme.rosePrimary, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                                fontSize: 11,
+                                color: NexusTheme.rosePrimary,
+                                fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -177,9 +189,12 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
                 value: 'profile',
                 child: Row(
                   children: [
-                    Icon(Icons.person_outline, color: NexusTheme.textDarkSecondary, size: 18),
+                    Icon(Icons.person_outline,
+                        color: NexusTheme.textDarkSecondary, size: 18),
                     SizedBox(width: 10),
-                    Text('My Account Profile', style: TextStyle(fontSize: 13, color: NexusTheme.textDarkPrimary)),
+                    Text('My Account Profile',
+                        style: TextStyle(
+                            fontSize: 13, color: NexusTheme.textDarkPrimary)),
                   ],
                 ),
               ),
@@ -187,9 +202,14 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
                 value: 'logout',
                 child: Row(
                   children: const [
-                    Icon(Icons.logout, color: NexusTheme.alertRedText, size: 18),
+                    Icon(Icons.logout,
+                        color: NexusTheme.alertRedText, size: 18),
                     SizedBox(width: 10),
-                    Text('Sign Out', style: TextStyle(fontSize: 13, color: NexusTheme.alertRedText, fontWeight: FontWeight.bold)),
+                    Text('Sign Out',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: NexusTheme.alertRedText,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -200,7 +220,8 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
               decoration: BoxDecoration(
                 color: NexusTheme.bgCocoaDeeper,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: NexusTheme.rosePrimary.withOpacity(0.6)),
+                border:
+                    Border.all(color: NexusTheme.rosePrimary.withOpacity(0.6)),
               ),
               child: Row(
                 children: [
@@ -212,10 +233,14 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
                   const SizedBox(width: 6),
                   Text(
                     u.fullName.split(' ')[0],
-                    style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 2),
-                  const Icon(Icons.keyboard_arrow_down, color: NexusTheme.textMuted, size: 14),
+                  const Icon(Icons.keyboard_arrow_down,
+                      color: NexusTheme.textMuted, size: 14),
                 ],
               ),
             ),
@@ -229,10 +254,15 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
                 foregroundColor: Colors.white,
                 elevation: 2,
                 padding: const EdgeInsets.symmetric(horizontal: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
               ),
               icon: const Icon(Icons.person, size: 15),
-              label: const Text('LOGIN', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
+              label: const Text('LOGIN',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.8)),
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -249,4 +279,3 @@ class NexusNavbar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 }
-

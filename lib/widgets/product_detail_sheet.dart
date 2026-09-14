@@ -144,7 +144,7 @@ class _ProductDetailSheetState extends ConsumerState<ProductDetailSheet> {
                     children: [
                       Text(
                         '৳${p.price.toStringAsFixed(0)} BDT',
-                        style: const TextStyle(color: NexusTheme.accentCyan, fontSize: 22, fontWeight: FontWeight.extrabold),
+                        style: const TextStyle(color: NexusTheme.accentCyan, fontSize: 22, fontWeight: FontWeight.w800),
                       ),
                       if (p.compareAtPrice > p.price) ...[
                         const SizedBox(width: 10),
@@ -239,7 +239,7 @@ class _ProductDetailSheetState extends ConsumerState<ProductDetailSheet> {
                       icon: const Icon(Icons.shopping_bag, size: 20),
                       label: Text(
                         'ADD TO CART • ৳${(p.price * _quantity).toStringAsFixed(0)} BDT',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.extrabold, letterSpacing: 0.8),
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, letterSpacing: 0.8),
                       ),
                       onPressed: p.warehouseStock > 0
                           ? () {

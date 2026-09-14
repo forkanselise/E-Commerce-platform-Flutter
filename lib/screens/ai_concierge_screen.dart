@@ -52,7 +52,7 @@ class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
                 children: [
                   Row(
                     children: [
-                      const Text('MR. BUTTER AI', style: TextStyle(color: NexusTheme.primaryGold, fontSize: 13, fontWeight: FontWeight.extrabold, letterSpacing: 0.8)),
+                      const Text('MR. BUTTER AI', style: TextStyle(color: NexusTheme.primaryGold, fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
                       const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
