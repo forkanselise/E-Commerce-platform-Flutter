@@ -61,7 +61,7 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
               Expanded(
                 child: Text(
                   _activeTab == 'register'
-                      ? 'Account created! Welcome to Buttercup Bakery & Tech.'
+                      ? 'Account created! Welcome to Buttercup.'
                       : 'Signed in successfully! Welcome back.',
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                 ),

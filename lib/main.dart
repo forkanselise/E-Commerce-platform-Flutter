@@ -17,7 +17,7 @@ class NexusBakeryTechApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Buttercup Bakery & Tech',
+      title: 'Buttercup',
       debugShowCheckedModeBanner: false,
       theme: NexusTheme.darkTheme,
       home: const SplashScreen(),
