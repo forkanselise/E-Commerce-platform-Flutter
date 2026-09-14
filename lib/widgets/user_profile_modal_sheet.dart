@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../theme/nexus_theme.dart';
-import 'glass_container.dart';
 
 class UserProfileModalSheet extends ConsumerStatefulWidget {
   const UserProfileModalSheet({super.key});
@@ -68,8 +67,14 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.green,
-          content: Text('Profile updated successfully!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          backgroundColor: NexusTheme.bgCocoaDark,
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: NexusTheme.rosePrimary, size: 20),
+              SizedBox(width: 10),
+              Text('Profile changes saved successfully!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            ],
+          ),
         ),
       );
     }
@@ -89,58 +94,85 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: const BoxDecoration(
-          color: NexusTheme.surfaceDark,
+          color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          border: Border(top: BorderSide(color: NexusTheme.primaryGold, width: 1.5)),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x333D2314),
+              blurRadius: 35,
+              offset: Offset(0, -5),
+            ),
+          ],
         ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Handle bar & Header
+              // Sheet Handlebar
               Center(
                 child: Container(
-                  width: 40,
+                  width: 44,
                   height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
+                  margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: const Color(0xFF3D2314).withOpacity(0.18),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
 
+              // Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'User Account Profile',
-                    style: TextStyle(color: NexusTheme.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: NexusTheme.textDarkPrimary,
+                      fontSize: 19,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: NexusTheme.textMuted),
-                    onPressed: () => Navigator.of(context).pop(),
+                  InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    borderRadius: BorderRadius.circular(50),
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: const BoxDecoration(
+                        color: NexusTheme.bgBase,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.close, size: 18, color: NexusTheme.textDarkPrimary),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
 
-              // Avatar Card Banner
-              GlassContainer(
+              // Avatar Card Banner (Matching React web UserProfileModal)
+              Container(
                 padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: NexusTheme.bgBase,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: NexusTheme.cardBorder),
+                ),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 36,
-                      backgroundImage: NetworkImage(_avatarUrlController.text.isNotEmpty
-                          ? _avatarUrlController.text
-                          : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'),
-                      backgroundColor: NexusTheme.primaryGold,
+                      radius: 34,
+                      backgroundImage: NetworkImage(
+                        _avatarUrlController.text.isNotEmpty
+                            ? _avatarUrlController.text
+                            : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+                      ),
+                      backgroundColor: NexusTheme.rosePrimary,
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +182,11 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
                               Flexible(
                                 child: Text(
                                   u.fullName,
-                                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    color: NexusTheme.textDarkPrimary,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -158,26 +194,41 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: u.role == 'Admin' ? NexusTheme.accentRed : NexusTheme.accentCyan,
+                                  color: u.role == 'Admin' ? NexusTheme.alertRedBg : const Color(0xFFFDF2F8),
                                   borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: u.role == 'Admin' ? NexusTheme.alertRedBorder : NexusTheme.roseLight,
+                                  ),
                                 ),
                                 child: Text(
                                   u.role,
-                                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: u.role == 'Admin' ? NexusTheme.alertRedText : NexusTheme.rosePrimary,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
-                          Text(u.email, style: const TextStyle(color: NexusTheme.textSecondary, fontSize: 13)),
+                          const SizedBox(height: 3),
+                          Text(
+                            u.email,
+                            style: const TextStyle(color: NexusTheme.textDarkSecondary, fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Icon(Icons.stars, color: NexusTheme.primaryGold, size: 14),
+                              const Icon(Icons.stars, color: NexusTheme.primaryGoldHover, size: 15),
                               const SizedBox(width: 4),
                               Text(
                                 '${u.loyaltyPoints} PTS • ${u.subscriptionTier}',
-                                style: const TextStyle(color: NexusTheme.primaryGold, fontSize: 11, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  color: NexusTheme.amberDark,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ],
                           ),
@@ -187,13 +238,16 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
               // Avatar Presets Selection
-              const Text('Preset Artisan Avatars', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text(
+                'Quick Preset Avatars',
+                style: TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 8),
               SizedBox(
-                height: 38,
+                height: 36,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _presetAvatars.length,
@@ -210,9 +264,12 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
                         margin: const EdgeInsets.only(right: 8),
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: isSel ? NexusTheme.primaryGold.withOpacity(0.25) : NexusTheme.cardGlass,
+                          color: isSel ? const Color(0xFFFDF2F8) : NexusTheme.bgBase,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: isSel ? NexusTheme.primaryGold : NexusTheme.cardBorder),
+                          border: Border.all(
+                            color: isSel ? NexusTheme.rosePrimary : NexusTheme.cardBorder,
+                            width: isSel ? 1.5 : 1,
+                          ),
                         ),
                         child: Row(
                           children: [
@@ -224,9 +281,9 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
                             Text(
                               preset['label']!,
                               style: TextStyle(
-                                color: isSel ? NexusTheme.primaryGold : Colors.white,
+                                color: isSel ? NexusTheme.rosePrimary : NexusTheme.textDarkSecondary,
                                 fontSize: 11,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ],
@@ -239,71 +296,110 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
               const SizedBox(height: 16),
 
               // Full Name Field
-              const Text('Full Name', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text(
+                'Full Name',
+                style: TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 6),
               TextField(
                 controller: _fullNameController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.person_outline, color: NexusTheme.primaryGold, size: 20),
-                  filled: true,
-                  fillColor: NexusTheme.cardGlass,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: NexusTheme.cardBorder)),
+                style: const TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 14),
+                decoration: NexusTheme.authInputDecoration(
+                  hintText: 'Your full name',
+                  prefixIcon: Icons.person_outline,
                 ),
               ),
               const SizedBox(height: 14),
 
               // Phone Number Field
-              const Text('Phone Number', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text(
+                'Phone Number',
+                style: TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 6),
               TextField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.phone_outlined, color: NexusTheme.primaryGold, size: 20),
-                  filled: true,
-                  fillColor: NexusTheme.cardGlass,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: NexusTheme.cardBorder)),
+                style: const TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 14),
+                decoration: NexusTheme.authInputDecoration(
+                  hintText: '+880 1700-000000',
+                  prefixIcon: Icons.phone_outlined,
                 ),
               ),
               const SizedBox(height: 14),
 
               // Custom Avatar URL Field
-              const Text('Custom Avatar / Cloudinary URL', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text(
+                'Avatar Image URL (Cloudinary / Web)',
+                style: TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 6),
               TextField(
                 controller: _avatarUrlController,
-                style: const TextStyle(color: Colors.white, fontSize: 12),
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.image_outlined, color: NexusTheme.accentCyan, size: 20),
-                  hintText: 'https://res.cloudinary.com/...',
-                  hintStyle: const TextStyle(color: NexusTheme.textMuted, fontSize: 12),
-                  filled: true,
-                  fillColor: NexusTheme.cardGlass,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: NexusTheme.cardBorder)),
+                style: const TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 13),
+                decoration: NexusTheme.authInputDecoration(
+                  hintText: 'https://res.cloudinary.com/dnt43ugtr/...',
+                  prefixIcon: Icons.image_outlined,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 14),
 
-              // Action Buttons: Save & Sign Out
+              // Read-Only Info Box (Email & Tier)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: NexusTheme.bgBase,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: NexusTheme.cardBorder),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Email Address', style: TextStyle(color: NexusTheme.textMuted, fontSize: 11, fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 2),
+                          Text(u.email, style: const TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 13, fontWeight: FontWeight.w700), overflow: TextOverflow.ellipsis),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Subscription', style: TextStyle(color: NexusTheme.textMuted, fontSize: 11, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: 2),
+                        Text(u.subscriptionTier, style: const TextStyle(color: NexusTheme.rosePrimary, fontSize: 13, fontWeight: FontWeight.w800)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Action Buttons: Sign Out & Save Changes
               Row(
                 children: [
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: NexusTheme.accentRed,
-                      side: const BorderSide(color: NexusTheme.accentRed),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      foregroundColor: NexusTheme.alertRedText,
+                      backgroundColor: NexusTheme.alertRedBg,
+                      side: const BorderSide(color: NexusTheme.alertRedBorder),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    icon: const Icon(Icons.logout, size: 18),
-                    label: const Text('Sign Out', style: TextStyle(fontWeight: FontWeight.bold)),
+                    icon: const Icon(Icons.logout, size: 17),
+                    label: const Text('Sign Out', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                     onPressed: () async {
                       await ref.read(authProvider.notifier).logout();
                       if (mounted) {
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('You have been signed out.')),
+                          const SnackBar(
+                            backgroundColor: NexusTheme.bgCocoaDark,
+                            content: Text('You have signed out from Buttercup.'),
+                          ),
                         );
                       }
                     },
@@ -312,21 +408,25 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
                   Expanded(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: NexusTheme.primaryGold,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        backgroundColor: NexusTheme.rosePrimary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        elevation: 2,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       icon: _isSaving
-                          ? const SizedBox(height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                          : const Icon(Icons.save, size: 18),
-                      label: const Text('SAVE CHANGES', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                          : const Icon(Icons.save_outlined, size: 17),
+                      label: Text(
+                        _isSaving ? 'Saving...' : 'Save Changes',
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                      ),
                       onPressed: _isSaving ? null : _handleSave,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -334,3 +434,4 @@ class _UserProfileModalSheetState extends ConsumerState<UserProfileModalSheet> {
     );
   }
 }
+

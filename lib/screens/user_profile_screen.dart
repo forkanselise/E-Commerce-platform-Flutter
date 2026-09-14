@@ -19,40 +19,68 @@ class UserProfileScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const SizedBox(height: 20),
-            GlassContainer(
-              padding: const EdgeInsets.all(28),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              decoration: BoxDecoration(
+                color: NexusTheme.bgCocoaDark,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: NexusTheme.rosePrimary.withOpacity(0.35)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: const BoxDecoration(
-                      gradient: NexusTheme.goldGradient,
-                      shape: BoxShape.circle,
+                  // Prominent Buttercup Logo
+                  Image.asset(
+                    'assets/images/buttercup_logo.png',
+                    height: 80,
+                    fit: BoxFit.contain,
+                    errorBuilder: (ctx, err, stack) => Image.asset(
+                      'assets/images/Picture2.png',
+                      height: 80,
+                      fit: BoxFit.contain,
+                      errorBuilder: (c, e, s) => Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          gradient: NexusTheme.roseGradient,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.cake, color: Colors.white, size: 48),
+                      ),
                     ),
-                    child: const Icon(Icons.person_outline, size: 48, color: Colors.black),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
                   const Text(
                     'Welcome to Buttercup',
-                    style: TextStyle(color: NexusTheme.textPrimary, fontSize: 22, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Sign in or register to access your order history, manage saved addresses, collect loyalty points, and update your profile.',
+                    'Sign in or create an account to access order tracking, redeem loyalty rewards, join artisan masterclasses, and customize your profile.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: NexusTheme.textSecondary, fontSize: 13, height: 1.4),
+                    style: TextStyle(color: NexusTheme.textLightSecondary, fontSize: 13, height: 1.45),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: NexusTheme.accentRed,
+                      backgroundColor: NexusTheme.rosePrimary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size.fromHeight(48),
+                      elevation: 3,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                     icon: const Icon(Icons.login, size: 18),
-                    label: const Text('SIGN IN TO YOUR ACCOUNT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    label: const Text('SIGN IN TO YOUR ACCOUNT', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 0.5)),
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
@@ -65,13 +93,13 @@ class UserProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 12),
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: NexusTheme.primaryGold,
-                      side: const BorderSide(color: NexusTheme.primaryGold),
+                      foregroundColor: NexusTheme.roseLight,
+                      side: const BorderSide(color: NexusTheme.rosePrimary, width: 1.2),
                       minimumSize: const Size.fromHeight(48),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                     icon: const Icon(Icons.person_add_alt_1, size: 18),
-                    label: const Text('CREATE NEW ACCOUNT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    label: const Text('CREATE BUTTERCUP ACCOUNT', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 0.5)),
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
@@ -95,19 +123,25 @@ class UserProfileScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Profile Card Banner
-          GlassContainer(
+          Container(
             padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: NexusTheme.bgCocoaDark,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: NexusTheme.rosePrimary.withOpacity(0.3)),
+            ),
             child: Column(
               children: [
                 CircleAvatar(
                   radius: 40,
                   backgroundImage: NetworkImage(u.avatarUrl),
-                  backgroundColor: NexusTheme.primaryGold,
+                  backgroundColor: NexusTheme.rosePrimary,
                 ),
                 const SizedBox(height: 12),
                 Text(u.fullName, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                Text(u.email, style: const TextStyle(color: NexusTheme.textSecondary, fontSize: 13)),
-                const SizedBox(height: 6),
+                const SizedBox(height: 2),
+                Text(u.email, style: const TextStyle(color: NexusTheme.textLightSecondary, fontSize: 13)),
+                const SizedBox(height: 4),
                 Text(u.phone, style: const TextStyle(color: NexusTheme.textMuted, fontSize: 12)),
                 const SizedBox(height: 14),
 
@@ -117,7 +151,7 @@ class UserProfileScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: NexusTheme.primaryGold.withOpacity(0.2),
+                        color: NexusTheme.primaryGold.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: NexusTheme.primaryGold.withOpacity(0.5)),
                       ),
@@ -133,11 +167,11 @@ class UserProfileScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: NexusTheme.accentCyan.withOpacity(0.2),
+                        color: NexusTheme.rosePrimary.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: NexusTheme.accentCyan.withOpacity(0.5)),
+                        border: Border.all(color: NexusTheme.rosePrimary.withOpacity(0.5)),
                       ),
-                      child: Text(u.subscriptionTier, style: const TextStyle(color: NexusTheme.accentCyan, fontWeight: FontWeight.bold, fontSize: 12)),
+                      child: Text(u.subscriptionTier, style: const TextStyle(color: NexusTheme.roseLight, fontWeight: FontWeight.bold, fontSize: 12)),
                     ),
                   ],
                 ),
@@ -148,9 +182,10 @@ class UserProfileScreen extends ConsumerWidget {
                     Expanded(
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: NexusTheme.primaryGold,
-                          foregroundColor: Colors.black,
+                          backgroundColor: NexusTheme.rosePrimary,
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
+                          elevation: 2,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         icon: const Icon(Icons.edit, size: 16),
@@ -168,14 +203,25 @@ class UserProfileScreen extends ConsumerWidget {
                     const SizedBox(width: 10),
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: NexusTheme.accentRed,
-                        side: const BorderSide(color: NexusTheme.accentRed),
+                        foregroundColor: NexusTheme.alertRedText,
+                        backgroundColor: NexusTheme.alertRedBg,
+                        side: const BorderSide(color: NexusTheme.alertRedBorder),
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       icon: const Icon(Icons.logout, size: 16),
                       label: const Text('SIGN OUT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                      onPressed: () => ref.read(authProvider.notifier).logout(),
+                      onPressed: () async {
+                        await ref.read(authProvider.notifier).logout();
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: NexusTheme.bgCocoaDark,
+                              content: Text('You have been signed out.'),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -212,8 +258,8 @@ class UserProfileScreen extends ConsumerWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: NexusTheme.accentCyan.withOpacity(0.2), shape: BoxShape.circle),
-                  child: const Icon(Icons.receipt_long, color: NexusTheme.accentCyan, size: 20),
+                  decoration: BoxDecoration(color: NexusTheme.rosePrimary.withOpacity(0.15), shape: BoxShape.circle),
+                  child: const Icon(Icons.receipt_long, color: NexusTheme.roseLight, size: 20),
                 ),
                 const SizedBox(width: 14),
                 const Expanded(
@@ -221,7 +267,7 @@ class UserProfileScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Order #SMART-842019', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
-                      Text('Callebaut Chocolate & Anchor Cream', style: TextStyle(color: NexusTheme.textSecondary, fontSize: 12)),
+                      Text('Callebaut Chocolate & Anchor Cream', style: TextStyle(color: NexusTheme.textLightSecondary, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -245,7 +291,7 @@ class UserProfileScreen extends ConsumerWidget {
         children: [
           Icon(icon, color: NexusTheme.primaryGold, size: 18),
           const SizedBox(width: 12),
-          Text(label, style: const TextStyle(color: NexusTheme.textSecondary, fontSize: 13)),
+          Text(label, style: const TextStyle(color: NexusTheme.textLightSecondary, fontSize: 13)),
           const Spacer(),
           Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
         ],
@@ -253,3 +299,4 @@ class UserProfileScreen extends ConsumerWidget {
     );
   }
 }
+

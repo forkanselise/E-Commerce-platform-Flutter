@@ -163,12 +163,20 @@ class _CartDrawerSheetState extends ConsumerState<CartDrawerSheet> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: NexusTheme.rosePrimary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
                 onPressed: () {
                   cartNotifier.clearCart();
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('🎉 Order Placed Successfully! Order #NEXUS-889102')),
+                    const SnackBar(
+                      backgroundColor: NexusTheme.bgCocoaDark,
+                      content: Text('🎉 Order Placed Successfully! Order #SMART-889102'),
+                    ),
                   );
                 },
                 child: const Text('PROCEED TO CHECKOUT', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),

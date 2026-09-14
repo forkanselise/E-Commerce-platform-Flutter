@@ -89,4 +89,4 @@ class CatalogNotifier extends StateNotifier<CatalogState> {
 }
 
 final catalogProvider = StateNotifierProvider<CatalogNotifier, CatalogState>((ref) => CatalogNotifier());
-final categoriesProvider = Provider<List<String>>((ref) => ['All', 'Ingredients', 'Tools', 'Dairy', 'Chocolate', 'Flavours']);
+final categoriesProvider = Provider<List<String>>((ref) => ['All', 'Ingredients', 'Tools', 'Dairy', 'Chocolate', 'Flavours', 'Flour & Yeast']);

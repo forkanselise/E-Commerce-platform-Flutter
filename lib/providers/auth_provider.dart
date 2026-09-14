@@ -30,6 +30,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final savedUser = await AuthService.getSavedUser();
     if (savedUser != null) {
       state = state.copyWith(user: savedUser, isLoading: false);
+      // Background sync profile if token exists
+      AuthService.fetchProfile().then((fresh) {
+        if (fresh != null && mounted) {
+          state = state.copyWith(user: fresh);
+        }
+      });
     } else {
       state = state.copyWith(isLoading: false, clearUser: true);
     }
@@ -74,15 +80,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (current == null) return false;
 
     state = state.copyWith(isLoading: true);
-    final updated = current.copyWith(
-      fullName: fullName.trim(),
-      phone: phone.trim(),
-      avatarUrl: avatarUrl.trim().isNotEmpty ? avatarUrl.trim() : current.avatarUrl,
+    final updated = await AuthService.updateProfile(
+      current,
+      fullName: fullName,
+      phone: phone,
+      avatarUrl: avatarUrl,
     );
 
-    await AuthService.saveSession(updated);
-    state = state.copyWith(user: updated, isLoading: false);
-    return true;
+    if (updated != null) {
+      state = state.copyWith(user: updated, isLoading: false, error: null);
+      return true;
+    }
+    state = state.copyWith(isLoading: false);
+    return false;
   }
 
   Future<void> logout() async {
@@ -96,3 +106,4 @@ class AuthNotifier extends StateNotifier<AuthState> {
 }
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) => AuthNotifier());
+

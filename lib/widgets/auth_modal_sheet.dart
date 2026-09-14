@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../theme/nexus_theme.dart';
-import 'glass_container.dart';
 
 class AuthModalSheet extends ConsumerStatefulWidget {
   final String initialTab; // 'login' | 'register'
@@ -17,6 +16,7 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _fullNameController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -53,10 +53,20 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.green.shade800,
-          content: Text(
-            _activeTab == 'register' ? 'Account created successfully! Welcome to Buttercup.' : 'Signed in successfully!',
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          backgroundColor: NexusTheme.bgCocoaDark,
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: NexusTheme.primaryGold, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  _activeTab == 'register'
+                      ? 'Account created! Welcome to Buttercup Bakery & Tech.'
+                      : 'Signed in successfully! Welcome back.',
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -72,11 +82,17 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: const BoxDecoration(
-          color: NexusTheme.surfaceDark,
+          color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          border: Border(top: BorderSide(color: NexusTheme.primaryGold, width: 1.5)),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x333D2314),
+              blurRadius: 35,
+              offset: Offset(0, -5),
+            ),
+          ],
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -86,67 +102,88 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
               // Sheet Handlebar
               Center(
                 child: Container(
-                  width: 40,
+                  width: 44,
                   height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: const Color(0xFF3D2314).withOpacity(0.18),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
 
-              // Title Header
+              // Close Button & Header
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/buttercup_logo.png',
-                        height: 36,
+                  InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    borderRadius: BorderRadius.circular(50),
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: const BoxDecoration(
+                        color: NexusTheme.bgBase,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.close, size: 18, color: NexusTheme.textDarkPrimary),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Logo & Title Header
+              Center(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/images/buttercup_logo.png',
+                      height: 58,
+                      fit: BoxFit.contain,
+                      errorBuilder: (ctx, err, stack) => Image.asset(
+                        'assets/images/Picture2.png',
+                        height: 58,
                         fit: BoxFit.contain,
-                        errorBuilder: (ctx, err, stack) => Container(
-                          padding: const EdgeInsets.all(8),
+                        errorBuilder: (c, e, s) => Container(
+                          padding: const EdgeInsets.all(12),
                           decoration: const BoxDecoration(
                             gradient: NexusTheme.roseGradient,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.lock, color: Colors.white, size: 20),
+                          child: const Icon(Icons.cake, color: Colors.white, size: 32),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Text(
-                        _activeTab == 'login' ? 'Sign In to Buttercup' : 'Create Account',
-                        style: const TextStyle(
-                          color: NexusTheme.textPrimary,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _activeTab == 'login' ? 'Sign In to Buttercup' : 'Create Buttercup Account',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: NexusTheme.textDarkPrimary,
                       ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: NexusTheme.textMuted),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _activeTab == 'login'
+                          ? 'Enter your credentials to access your account'
+                          : 'Fill in your details below to register',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: NexusTheme.textDarkSecondary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 6),
-              Text(
-                _activeTab == 'login'
-                    ? 'Enter your email & password to access your account.'
-                    : 'Fill in your details below to register a new account.',
-                style: const TextStyle(color: NexusTheme.textSecondary, fontSize: 13),
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
               // Tab Switcher (Sign In vs Create Account)
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: NexusTheme.cardGlass,
-                  borderRadius: BorderRadius.circular(16),
+                  color: NexusTheme.bgBase,
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: NexusTheme.cardBorder),
                 ),
                 child: Row(
@@ -158,17 +195,26 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
                           ref.read(authProvider.notifier).clearError();
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 9),
                           decoration: BoxDecoration(
-                            color: _activeTab == 'login' ? NexusTheme.primaryGold : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
+                            color: _activeTab == 'login' ? Colors.white : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: _activeTab == 'login'
+                                ? [
+                                    BoxShadow(
+                                      color: const Color(0xFF3D2314).withOpacity(0.08),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 2),
+                                    )
+                                  ]
+                                : null,
                           ),
                           child: Center(
                             child: Text(
                               'Sign In',
                               style: TextStyle(
-                                color: _activeTab == 'login' ? Colors.black : Colors.white,
-                                fontWeight: FontWeight.bold,
+                                color: _activeTab == 'login' ? NexusTheme.textDarkPrimary : NexusTheme.textMuted,
+                                fontWeight: FontWeight.w700,
                                 fontSize: 13,
                               ),
                             ),
@@ -183,17 +229,26 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
                           ref.read(authProvider.notifier).clearError();
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 9),
                           decoration: BoxDecoration(
-                            color: _activeTab == 'register' ? NexusTheme.primaryGold : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
+                            color: _activeTab == 'register' ? Colors.white : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: _activeTab == 'register'
+                                ? [
+                                    BoxShadow(
+                                      color: const Color(0xFF3D2314).withOpacity(0.08),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 2),
+                                    )
+                                  ]
+                                : null,
                           ),
                           child: Center(
                             child: Text(
                               'Create Account',
                               style: TextStyle(
-                                color: _activeTab == 'register' ? Colors.black : Colors.white,
-                                fontWeight: FontWeight.bold,
+                                color: _activeTab == 'register' ? NexusTheme.textDarkPrimary : NexusTheme.textMuted,
+                                fontWeight: FontWeight.w700,
                                 fontSize: 13,
                               ),
                             ),
@@ -204,26 +259,30 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
-              // Error Alert Banner
+              // Error Alert Banner (Matching React web app error alert)
               if (authState.error != null)
                 Container(
                   margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   decoration: BoxDecoration(
-                    color: NexusTheme.accentRed.withOpacity(0.15),
-                    border: Border.all(color: NexusTheme.accentRed),
+                    color: NexusTheme.alertRedBg,
+                    border: Border.all(color: NexusTheme.alertRedBorder),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline, color: NexusTheme.accentRed, size: 18),
+                      const Icon(Icons.error_outline, color: NexusTheme.alertRedText, size: 18),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           authState.error!,
-                          style: const TextStyle(color: NexusTheme.accentRed, fontSize: 12, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            color: NexusTheme.alertRedText,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
@@ -232,79 +291,97 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
 
               // Form Inputs
               if (_activeTab == 'register') ...[
-                const Text('Full Name *', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Full Name *',
+                  style: TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(height: 6),
                 TextField(
                   controller: _fullNameController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person, color: NexusTheme.primaryGold, size: 20),
-                    hintText: 'Chef Sarah Rahman',
-                    hintStyle: const TextStyle(color: NexusTheme.textMuted, fontSize: 13),
-                    filled: true,
-                    fillColor: NexusTheme.cardGlass,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: NexusTheme.cardBorder)),
+                  style: const TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 14),
+                  decoration: NexusTheme.authInputDecoration(
+                    hintText: 'e.g. Chef Sarah Rahman',
+                    prefixIcon: Icons.person_outline,
                   ),
                 ),
                 const SizedBox(height: 14),
               ],
 
-              const Text('Email Address *', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text(
+                'Email Address *',
+                style: TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 6),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.email, color: NexusTheme.primaryGold, size: 20),
+                style: const TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 14),
+                decoration: NexusTheme.authInputDecoration(
                   hintText: 'baker@smartbakery.com',
-                  hintStyle: const TextStyle(color: NexusTheme.textMuted, fontSize: 13),
-                  filled: true,
-                  fillColor: NexusTheme.cardGlass,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: NexusTheme.cardBorder)),
+                  prefixIcon: Icons.email_outlined,
                 ),
               ),
               const SizedBox(height: 14),
 
-              const Text('Password *', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text(
+                'Password *',
+                style: TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 6),
               TextField(
                 controller: _passwordController,
-                obscureText: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock_outline, color: NexusTheme.primaryGold, size: 20),
+                obscureText: _obscurePassword,
+                style: const TextStyle(color: NexusTheme.textDarkPrimary, fontSize: 14),
+                decoration: NexusTheme.authInputDecoration(
                   hintText: '••••••••',
-                  hintStyle: const TextStyle(color: NexusTheme.textMuted, fontSize: 13),
-                  filled: true,
-                  fillColor: NexusTheme.cardGlass,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: NexusTheme.cardBorder)),
+                  prefixIcon: Icons.lock_outline,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      color: NexusTheme.textMuted,
+                      size: 18,
+                    ),
+                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 22),
 
-              // Submit Button
+              // Primary Action Submit Button (Rose Primary matching web platform)
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: NexusTheme.accentRed,
+                  backgroundColor: NexusTheme.rosePrimary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: authState.isLoading ? null : _handleSubmit,
                 child: authState.isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            _activeTab == 'login' ? 'Signing In...' : 'Registering Account...',
+                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                          ),
+                        ],
                       )
                     : Text(
-                        _activeTab == 'login' ? 'SIGN IN' : 'CREATE ACCOUNT',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1),
+                        _activeTab == 'login' ? 'Sign In' : 'Create Account',
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
                       ),
               ),
 
               const SizedBox(height: 16),
+
+              // Tab Switcher Link
               Center(
                 child: GestureDetector(
                   onTap: () {
@@ -316,11 +393,14 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
                   child: Text.rich(
                     TextSpan(
                       text: _activeTab == 'login' ? "Don't have an account? " : "Already have an account? ",
-                      style: const TextStyle(color: NexusTheme.textSecondary, fontSize: 13),
+                      style: const TextStyle(color: NexusTheme.textDarkSecondary, fontSize: 13),
                       children: [
                         TextSpan(
                           text: _activeTab == 'login' ? 'Sign up now' : 'Log in here',
-                          style: const TextStyle(color: NexusTheme.primaryGold, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            color: NexusTheme.rosePrimary,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ],
                     ),
@@ -335,3 +415,4 @@ class _AuthModalSheetState extends ConsumerState<AuthModalSheet> {
     );
   }
 }
+

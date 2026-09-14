@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/catalog_provider.dart';
 import '../providers/mobile_phone_provider.dart';
+import '../providers/navigation_provider.dart';
 import '../theme/nexus_theme.dart';
 import '../widgets/glass_container.dart';
 import '../widgets/product_card.dart';
@@ -37,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
                     gradient: NexusTheme.goldGradient,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Text('ARTISAN BAKERY & TECH GEAR', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold)),
+                  child: const Text('BUTTERCUP • ARTISAN BAKERY & TECH HUB', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.extrabold, letterSpacing: 0.8)),
                 ),
                 const SizedBox(height: 12),
                 const Text(
@@ -53,7 +54,7 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: NexusTheme.accentRed,
+                        backgroundColor: NexusTheme.rosePrimary,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       ),
@@ -78,9 +79,7 @@ class HomeScreen extends ConsumerWidget {
                       icon: const Icon(Icons.school, size: 16),
                       label: const Text('JOIN CLASS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Opening Baking Academy Masterclasses...')),
-                        );
+                        ref.read(navigationIndexProvider.notifier).state = 3; // Academy tab
                       },
                     ),
                     OutlinedButton.icon(
@@ -93,9 +92,7 @@ class HomeScreen extends ConsumerWidget {
                       icon: const Icon(Icons.smart_toy, size: 16),
                       label: const Text('Ask Mr. Butter AI', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Opening AI Concierge Assistant...')),
-                        );
+                        ref.read(navigationIndexProvider.notifier).state = 4; // AI Concierge tab
                       },
                     ),
                   ],
@@ -103,7 +100,7 @@ class HomeScreen extends ConsumerWidget {
 
                 const SizedBox(height: 16),
                 const Text(
-                  'Discover Belgian Callebaut chocolate, Anchor dairy, artisan tools, and flagship smartphones backed by multi-agent AI.',
+                  'Discover Belgian Callebaut chocolate, Anchor dairy, French flour, artisan tools, and flagship smartphones backed by multi-agent AI.',
                   style: TextStyle(color: NexusTheme.textSecondary, fontSize: 13),
                 ),
               ],
@@ -121,7 +118,10 @@ class HomeScreen extends ConsumerWidget {
                 final cat = categories[i];
                 final isSel = catalogState.selectedCategory == cat;
                 return GestureDetector(
-                  onTap: () => catalogNotifier.setCategory(cat),
+                  onTap: () {
+                    catalogNotifier.setCategory(cat);
+                    ref.read(navigationIndexProvider.notifier).state = 1; // Catalog tab
+                  },
                   child: Container(
                     margin: const EdgeInsets.only(right: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -144,7 +144,10 @@ class HomeScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('FEATURED INGREDIENTS & TOOLS', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
-              Text('${catalogState.featuredProducts.length} items', style: const TextStyle(color: NexusTheme.primaryGold, fontSize: 12)),
+              GestureDetector(
+                onTap: () => ref.read(navigationIndexProvider.notifier).state = 1,
+                child: Text('${catalogState.featuredProducts.length} items', style: const TextStyle(color: NexusTheme.primaryGold, fontSize: 12, fontWeight: FontWeight.bold)),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -165,7 +168,10 @@ class HomeScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('FLAGSHIP MOBILE PHONES', style: TextStyle(color: NexusTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
-              const Text('View All', style: TextStyle(color: NexusTheme.accentCyan, fontSize: 12)),
+              GestureDetector(
+                onTap: () => ref.read(navigationIndexProvider.notifier).state = 2,
+                child: const Text('View All', style: TextStyle(color: NexusTheme.accentCyan, fontSize: 12, fontWeight: FontWeight.bold)),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -190,3 +196,4 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 }
+

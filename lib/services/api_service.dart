@@ -10,7 +10,7 @@ class ApiService {
     final token = prefs.getString('nb_token');
     return {
       'Content-Type': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
+      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
     };
   }
 
@@ -43,4 +43,25 @@ class ApiService {
       return null;
     }
   }
+
+  static Future<dynamic> put(String endpoint, Map<String, dynamic> body) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.put(
+        Uri.parse('$baseUrl$endpoint'),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        if (response.body.isNotEmpty) {
+          return jsonDecode(response.body);
+        }
+        return {'success': true};
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
 }
+

@@ -15,10 +15,24 @@ class AiConciergeScreen extends ConsumerStatefulWidget {
 class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
   final TextEditingController _ctrl = TextEditingController();
 
+  static const List<String> _quickPrompts = [
+    '🍫 Best chocolate for ganache?',
+    '🧈 Anchor butter vs local butter',
+    '📱 Flagship phone for photo editing?',
+    '🥐 How to bake sourdough?',
+    '🎓 Academy masterclass pricing',
+  ];
+
+  void _sendPrompt(String promptText) {
+    if (promptText.trim().isEmpty) return;
+    _ctrl.clear();
+    final catalogState = ref.read(catalogProvider);
+    ref.read(aiAgentProvider.notifier).sendMessage(promptText, catalogState.allProducts, [], ref);
+  }
+
   @override
   Widget build(BuildContext context) {
     final aiState = ref.watch(aiAgentProvider);
-    final catalogState = ref.watch(catalogProvider);
 
     return Column(
       children: [
@@ -29,15 +43,25 @@ class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(color: NexusTheme.accentCyan, shape: BoxShape.circle),
-                child: const Icon(Icons.psychology, color: Colors.black, size: 20),
+                decoration: const BoxDecoration(gradient: NexusTheme.roseGradient, shape: BoxShape.circle),
+                child: const Icon(Icons.psychology, color: Colors.white, size: 20),
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('ACTIVE AGENT: ${aiState.activeAgent}', style: const TextStyle(color: NexusTheme.accentCyan, fontSize: 12, fontWeight: FontWeight.bold)),
-                  const Text('Smart Bakery Multi-Agent Concierge Engine (Riverpod)', style: TextStyle(color: NexusTheme.textMuted, fontSize: 11)),
+                  Row(
+                    children: [
+                      const Text('MR. BUTTER AI', style: TextStyle(color: NexusTheme.primaryGold, fontSize: 13, fontWeight: FontWeight.extrabold, letterSpacing: 0.8)),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(color: NexusTheme.accentCyan.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+                        child: Text(aiState.activeAgent, style: const TextStyle(color: NexusTheme.accentCyan, fontSize: 9, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  const Text('Buttercup Multi-Agent Bakery & Tech Concierge', style: TextStyle(color: NexusTheme.textMuted, fontSize: 11)),
                 ],
               ),
             ],
@@ -54,7 +78,7 @@ class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
                 alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 12),
-                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.82),
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: isUser ? NexusTheme.primaryGold : NexusTheme.surfaceDark,
@@ -102,6 +126,37 @@ class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
               ],
             ),
           ),
+
+        // Quick Suggestion Chips
+        SizedBox(
+          height: 34,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: _quickPrompts.length,
+            itemBuilder: (ctx, i) {
+              return GestureDetector(
+                onTap: () => _sendPrompt(_quickPrompts[i]),
+                child: Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: NexusTheme.cardGlass,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: NexusTheme.cardBorder),
+                  ),
+                  child: Text(
+                    _quickPrompts[i],
+                    style: const TextStyle(color: NexusTheme.textLightSecondary, fontSize: 11),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // Chat Input Row
         Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
@@ -109,9 +164,10 @@ class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
               Expanded(
                 child: TextField(
                   controller: _ctrl,
+                  onSubmitted: (val) => _sendPrompt(val),
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                   decoration: InputDecoration(
-                    hintText: 'Ask about Callebaut, Anchor butter, or adding to cart...',
+                    hintText: 'Ask Mr. Butter about baking, tech gear, or recommendations...',
                     hintStyle: const TextStyle(color: NexusTheme.textMuted, fontSize: 12),
                     filled: true,
                     fillColor: NexusTheme.cardGlass,
@@ -121,11 +177,7 @@ class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () {
-                  final text = _ctrl.text;
-                  _ctrl.clear();
-                  ref.read(aiAgentProvider.notifier).sendMessage(text, catalogState.allProducts, [], ref);
-                },
+                onTap: () => _sendPrompt(_ctrl.text),
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: const BoxDecoration(gradient: NexusTheme.goldGradient, shape: BoxShape.circle),
@@ -139,3 +191,4 @@ class _AiConciergeScreenState extends ConsumerState<AiConciergeScreen> {
     );
   }
 }
+

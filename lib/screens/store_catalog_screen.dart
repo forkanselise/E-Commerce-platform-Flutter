@@ -11,6 +11,7 @@ class StoreCatalogScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final catalogState = ref.watch(catalogProvider);
     final catalogNotifier = ref.read(catalogProvider.notifier);
+    final categories = ref.watch(categoriesProvider);
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -31,18 +32,74 @@ class StoreCatalogScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(16),
                 borderSide: const BorderSide(color: NexusTheme.cardBorder),
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: NexusTheme.cardBorder),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: NexusTheme.rosePrimary, width: 1.5),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 36,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (ctx, i) {
+                final cat = categories[i];
+                final isSel = catalogState.selectedCategory == cat;
+                return GestureDetector(
+                  onTap: () => catalogNotifier.setCategory(cat),
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isSel ? NexusTheme.primaryGold : NexusTheme.cardGlass,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: isSel ? NexusTheme.primaryGold : NexusTheme.cardBorder),
+                    ),
+                    child: Text(
+                      cat,
+                      style: TextStyle(color: isSel ? Colors.black : Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 14),
-          Text(
-            'Showing ${catalogState.products.length} Products',
-            style: const TextStyle(color: NexusTheme.textMuted, fontSize: 12, fontWeight: FontWeight.w600),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Showing ${catalogState.products.length} Products',
+                style: const TextStyle(color: NexusTheme.textMuted, fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+              if (catalogState.selectedCategory != 'All' || catalogState.searchQuery.isNotEmpty)
+                GestureDetector(
+                  onTap: () {
+                    catalogNotifier.setCategory('All');
+                    catalogNotifier.setSearchQuery('');
+                  },
+                  child: const Text('Reset Filters', style: TextStyle(color: NexusTheme.roseLight, fontSize: 11, fontWeight: FontWeight.bold)),
+                ),
+            ],
           ),
           const SizedBox(height: 12),
           Expanded(
             child: catalogState.products.isEmpty
-                ? const Center(
-                    child: Text('No products matching query', style: TextStyle(color: NexusTheme.textMuted)),
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.search_off, color: NexusTheme.textMuted, size: 48),
+                        SizedBox(height: 12),
+                        Text('No products matching query', style: TextStyle(color: NexusTheme.textMuted, fontSize: 14)),
+                      ],
+                    ),
                   )
                 : GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -60,3 +117,4 @@ class StoreCatalogScreen extends ConsumerWidget {
     );
   }
 }
+
